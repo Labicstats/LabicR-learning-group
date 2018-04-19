@@ -1,0 +1,239 @@
+##############################################################################################
+##Section 7.0 Introduction to R - Writing programs in R
+
+
+##Course Manual Code 
+
+#######################################
+##First Function
+cm.to.inches <- function(values) {
+	values/2.54
+}
+
+cm.to.inches(25)
+
+dat <- c(170,180,190,200)
+cm.to.inches(dat)
+
+mat.1 <- matrix(sample(1:9,9), nrow=3)
+mat.1
+cm.to.inches(mat.1)
+
+######################################
+##Second Function
+
+std.error <- function(values) {
+	sqrt(var(values)/length(values))
+}
+
+dat.2 <- rnorm(10, mean=4, sd=1)
+dat.2
+std.error(dat.2)
+
+y <- rnorm(15, 7, 14)	# generate some data 
+x <- gl(3,5, labels=c("one", "two", "three"))
+dataf <- data.frame(y,x)# combine x and y into a dataframe
+str(dataf) 			# check the attributes of our dataframe
+
+#now to try out our function to calculate the standard errors of y for each level of x
+
+tapply(dataf$y, dataf$x, std.error)
+
+
+########################################
+##Third Function
+norm.sum <- function(values){
+	m <- mean(values)
+	print(paste("mean:", m, sep=" "), quote=FALSE)
+	quant <- quantile(values)
+	print("quantiles:", quote=FALSE)
+	print(quant)
+	st.result <- shapiro.test(values)
+	print(st.result)
+	par(mfrow=c(1,2))
+	hist(values)
+	qqnorm(values)
+	qqline(values, lty=2, col="red")
+}
+
+dat.3 <- rnorm(100, 25, 10)
+norm.sum(dat.3)
+
+########################################
+##Fourth function - default arguments
+f1 <- function(x=3, y=2) {
+  z1 <- x + y
+  z2 <- x + 2*y
+  list(result1=z1, result2=z2)
+}
+
+f1()
+f1(x=1, y=5)
+
+
+#########################################
+##For loop
+
+for(i in 1:5) {
+	print(i,+10)
+}
+
+#########################################
+##bootstrap 
+
+data(trees)
+a <- numeric(10000)	#to collect resample mean values
+for(i in 1:length(a)){
+	a[i] <- mean(sample(trees$Height, replace=T))#sample height and calc mean
+}
+hist(a, main="")
+quantile(a, c(0.0275, 0.975))#95% confidence intervals
+
+# one-sided p-values
+# H_A: true mean is greater than 70
+sum(a<70)/10000
+# H_A: true mean is smaller than 70
+sum(a>70)/10000
+
+# two-sided p-values
+2*min(sum(a>70)/10000,sum(a<70)/10000)
+
+stuff<-rnorm(50, 71, 5)
+a <- numeric(10000)
+for(i in 1:length(a)){
+	a[i] <- mean(sample(stuff, replace=T))
+}
+hist(a, main="")
+quantile(a, c(0.025, 0.975))
+abline(v=73.77, lty=2)
+abline(v=78.19, lty=2)
+
+
+# one-sided p-values
+sum(a<70)/10000
+sum(a>70)/10000
+
+# two-sided p-values
+2*min(sum(a>70)/10000,sum(a<70)/10000)
+
+##############################################
+##while loop
+i <- 2 
+while(i <= 4) {
+      i <- i+1
+      print(i)
+      }
+
+##############################################
+##if statements 
+
+Abs <- function(x){
+	if(x<0) -x else x	#if <0 puts minus sign before which make a positive else return value
+}
+Abs(-20)
+Abs(20)
+
+Abs(-3:3)
+
+Abs2 <- function(x){
+	ifelse(x<0, -x, x)
+}
+
+Abs2(-3:3)
+
+
+##################################################
+#ifelse function to recode data
+a <- seq(1,10, 0.5)#create some data to play with
+
+recode.1 <- function(x){
+		 ifelse(x <=4,"small", 	#<= 4 then return small
+			ifelse(x >= 8, "large", "medium"))	#>= 8 then large, else medium
+}
+ 
+(z <- recode.1(a))	# create vector of labels
+(dataf <- data.frame(a,z))#combine a z into dataframe
+str(dataf)
+
+###############################################
+##Exercise code
+#area of a circle
+circle.area <- function(r){ 
+	pi*r^2
+}
+
+#Fahrenheit to Centigrade 
+
+far.cent <- function(a){
+	val <-(a-32)*5/9
+	print(paste("Fahrenheit: ", round(a, digits=3), "oF",sep=" "), quote=FALSE)	# round to 3 dp
+	print(paste("Centigrade: ", round(val, digits=3), "oC", sep=" "), quote=FALSE)# round to 3 dp
+}
+
+far.cent(100)
+
+#alternative Fahrenheit to centigrade using cat function
+
+far.cent2 <- function(a){
+	val <-(a-32)*5/9	#calculation
+	cat("Fahrenheit: ", round(a, digits=3), "oF", "\n")# use cat function
+	cat("Centigrade: ", round(val, digits=3), "oC", "\n")# use cat function
+}
+
+far.cent2(100)
+
+#Create a vector of normally distributed data
+#length 100, mean 35 and standard deviation of 29
+
+vals <- rnorm(100, 35,15)	#create some norm dist data mean 35, sd=15
+summary.fun <- function(dat){
+	mymean <- round(mean(dat), digits=4)	#calc mean
+	mymedian <- round(median(dat), digits=4)#calc median
+	mymin <- round(min(dat), digits=4)#calc min
+	mymax <- round(max(dat), digits=4)#calc max
+	print(paste("mean:", mymean, sep=" "), quote=FALSE)# print mean
+	print(paste("median:", mymedian, sep=" "), quote=FALSE)#print median
+	print(paste("range:", "from:",mymin, "to", mymax, sep=" "), quote=FALSE)#print range
+	dens <- density(dat)#estimate density curve
+	hist(dat, main="",type="l",freq=FALSE)#plot histogram
+	lines(dens, lty=1, col="red")#plot density curve
+}
+
+summary.fun(vals)
+
+#calculate a median
+
+ourmedian <- function(x){
+	n<-length(x)
+	if (n %% 2==1) ## odd numbers
+	sort(x)[(n+1)/2] # find the middle number by adding 1 to length and div 2
+	else { ## even numbers
+	middletwo <- sort(x)[(n/2)+0:1]#find the two middle numbers
+	mean(middletwo)
+}
+}
+#function to simulate Ricker model
+
+Ricker.model <- function(nzero, r, time, K=1)     #sets initial population size, pop growth, time and carrying capacity
+{
+  N <- numeric(time+1)            #creates a real vector of length time+1 to store values of Nt+1
+  N[1] <- nzero                   #sets initial population size in first element of N
+  for (i in 1:time) {				#loops over time
+  N[i+1] <- N[i]*exp(r*(1 - N[i]/K))    
+  #outN <<- N	# make outN available outside the function, notice <<-
+  }
+  Time <- 0:time   					 # creates vector for x axis
+  #outTime <<- Time                # make outTime available outside the function, notice <<-
+  plot(Time, N, type="l", xlim=c(0, time), xlab="Time", ylab="Population size (N)", main=paste("r =",r, sep=" "))   #plots output
+}
+
+# To run
+
+Ricker.model(nzero=0.1,r=1,time=100)
+
+#simulate for values of r from 0 to 4 in 0.5 steps
+par(mfrow=c(3,3))
+rvec <- seq(0,4, 0.5)
+for(i in rvec){
+	Ricker.model(2,i, 100)
+}

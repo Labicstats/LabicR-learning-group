@@ -1,0 +1,454 @@
+######Introduction to R Course April 2014######
+######R code for exercises                 ######
+#################################################
+
+################################################################################
+##### Exercise 1
+
+##Question 6
+help(mean)          # different methods of using help
+?mean
+help("mean")
+help("median")
+
+##Question 7
+apropos("test")     # searches all functions in R for the string 'test'
+help("t.test")      # gets further information on the function t.test()
+
+##Question 8
+help.search("plot")  # searches for all instances of the string 'plot'
+help.search("plot",package="car") #only searches for plot in the package 'car'
+
+##Question 9
+help.start()        # starts R's html help system
+
+##Question 10
+installed.packages() # lists all installed packages
+
+##Question 11
+getwd()             # identifies the current working directory
+
+##Question 12
+setwd("file path")  # changes the working directory to a file path of your choice
+
+################################################################################
+##### Exercise 2
+
+##Question 1
+pi*((10/2)^2)        # calculates the area of a 10 cm diamter circle
+
+##Question 2
+log(12.43)           # natural log
+log10(12.43)         # log to base 10
+sqrt(12.43)          # square root
+exp(12.43)           # natural antilog
+
+##Question 3
+(23*0.21)^(1/3)      # calculates the cube root of 23*0.21
+
+##Question 4
+weight <- c(69,62,57,59,59,64,56,66,67,66)
+mean(weight)
+var(weight)
+sd(weight)
+range(weight)
+length(weight)
+weight[1:5]
+
+##Question 5
+height<-scan()
+height<-c(112, 102, 83, 84, 99, 90, 77, 112, 133, 112)
+summary(height)
+height[c(2,3,9,10)]
+height[height<=99]
+
+##Question 6
+bmi <- weight/(height/100)^2
+bmi
+
+##Question 7
+seq(0,1,0.1)
+
+##Question 8
+rev(seq(1,10,0.5))
+
+##Question 9
+rep(1:3, times=3)
+rep(1:3, each=3, times=2)
+rep(1:5, times= 5:1)
+rep(c(7,2,8,1),times= c(4,3,1,5))
+
+##Question 10
+height.sorted<- sort(height)
+height.descend <- rev(sort(height))
+
+##Question 11
+name <- c("Alfred","Barbara", "James","Jane","John","Judy","Louise",
+			"Mary","Ronald","William")
+height.order <- order(height)
+name[height.order]    # Ronald is the tallest
+
+##Question 12
+weight.descend <- rev(order(weight))
+name[weight.descend]  # Alfred is the heaviest
+
+##Question 13
+treatment <- gl(3,10)
+
+##Question 14
+save.image("file path and filename.RData")    # edit this command to include your file path and file name
+savehistory("file path and filename.Rhistory") # edit this command to include your file path and file name
+
+##Question 15
+ls()
+rm(treatment)
+q()
+
+################################################################################
+##### Exercise 3
+
+##Question 2&3
+whale<-read.table("C:\\whaledata.txt", header=T) # change the filepath to the location of your file
+attach(whale)
+names(whale)
+attributes(whale)
+
+##Question 4
+whale$time.at.station
+time.at.station               # if the dataframe is attached
+time.at.station[59]
+
+##Question 5
+whale[1:10,]              # extracts the first 10 rows of the dataframe
+whale[9:17,1:4]           # extract rows 9 to 17 of the first 4 columns
+
+##Question 6
+whale[depth>1200,]
+whale[gradient>200,]
+whale[water.noise=="low" & month=="May",]
+whale[water.noise=="low" & month=="October" & gradient > median(gradient),]
+whale[-(1:10),-8]
+whale[!(water.noise=="medium"),] # logical symbol ! means not
+
+##Question 7
+summary(whale)
+
+##Question 8
+whale[depth > 1500 & number.whales > mean(number.whales),]
+
+##Question 9
+new.whale <- na.exclude(whale)
+detach(whale)
+attach(new.whale)
+summary(new.whale)
+new.whale[depth > 1500 & number.whales > mean(number.whales),]
+
+##Question 10
+new.whale[order(depth),]
+new.whale[order(water.noise, depth),]
+new.whale[order(water.noise, -depth),]
+
+##Question 11
+subset(new.whale, water.noise=="low" & month=="October" & gradient > 100)
+
+##Question 12
+tapply(number.whales, water.noise, mean)
+tapply(number.whales,list(water.noise,month), mean)
+tapply(number.whales,list(water.noise,month),sd)
+
+##Question 14
+data(iris)
+attach(iris)
+new.iris<- edit(iris)
+fix(iris)
+names(iris)
+
+##Question 15
+tapply(Sepal.Length, Species, summary)
+iris[Sepal.Length < 5 & Petal.Width >0.2,]
+
+##Question 16
+by(iris, Species,mean)
+
+##Question 17
+write.table(iris, "c:\\iris.txt", col.names=T, row.names=F)
+
+##Question 19
+children<- data.frame(names,weight,height, bmi)
+
+##Question 20
+write.table(children, "c:\\children.csv", sep=",", col.names=T, row.names=F)
+
+##Question 21
+children <-read.csv("c:\\children.csv", header=T, row.names=1)
+
+##Question 22
+write.table(children, file="clipboard", sep="\t", col.names=T, row.names=F)
+
+################################################################################
+##### Exercise 4
+
+##Question 1
+squid <-read.table("D:\\Alex\\Aberdeen\\Aberdeen R-Course\\Data files\\squid1.txt", header=T)
+attach(squid)
+str(squid)    #use either str() or names()
+names(squid)
+summary(squid)
+
+##Question 2
+plot(nid.length)   # plot variable to look for outliers
+identify(nid.length)  # use identify to ID the outlier
+nid.length[11] <- 43.2   # Change the value of misstyped value
+plot(nid.length)
+
+plot(dig.weight)        # plot variable to look for outliers
+identify(dig.weight)     # use identify to ID the outlier
+dig.weight[50] <- 10.341   # Change the value of misstyped value
+plot(dig.weight)
+
+##Question 3
+plot(DML~weight)      #simple scatterplot of DML and weight
+plot(DML~sqrt(weight))     #  plots the same graph but with square root transformation of weight
+rug(DML, side=2)             # adds tick marks for each data point on the y axis
+rug(sqrt(weight), side=1)   # adds tick marks for each data point on the x axis
+
+##Question 4
+par(mfrow=c(2,2))    # plots 2 rows of graphs with 2 plots in each row
+hist(weight, freq=F)    # plots a histogram of the relative proportions
+den.weig <- density(weight)  # defines the density curve
+lines(den.weig)           # adds a density curve to the histogram
+hist(DML, freq=F)
+den.dml <- density(DML)
+lines(den.dml)
+hist(dig.weight, freq=F)
+den.dig <- density(dig.weight)
+lines(den.dig)
+hist(nid.weight, freq=F)
+den.nid <- density(nid.weight)
+lines(den.nid)
+par(mfrow=c(1,1))    # returns the graphics device to normal
+
+##Question 5
+boxplot(weight~maturity.stage, notch=T, xlab="Maturity stage", ylab="weight", main="Body weight of squid")
+
+##Question 6
+stripchart(weight~maturity.stage, method="jitter", jitter=0.1, xlab="weight", ylab="maturity stage", pch=1)
+
+##Question 7
+pairs(squid[8:13])
+
+panel.cor <- function(x, y, digits=2, prefix="", cex.cor)   # defines the correlation function
+{
+    usr <- par("usr"); on.exit(par(usr))
+    par(usr = c(0, 1, 0, 1))
+    r <- abs(cor(x, y))
+    txt <- format(c(r, 0.123456789), digits=digits)[1]
+    txt <- paste(prefix, txt, sep="")
+    if(missing(cex.cor)) cex <- 0.8/strwidth(txt)
+    text(0.5, 0.5, txt, cex = cex * r)
+}
+
+pairs(squid[8:13], lower.panel=panel.smooth, upper.panel=panel.cor) # Uses the panel.cor function in the upper panel
+
+##Question 8
+coplot(ovary.weight~weight|maturity.stage) #oavary.weight and weight conditioned by maturity.stage
+coplot(ovary.weight~weight|factor(month)*factor(year)) # month and year are now factors
+
+##Question 9
+library(lattice)
+xyplot(ovary.weight~weight|month, groups=year,auto.key=T)
+
+##Question 10
+plot(1:20, rep(1, l= 20), pch= 1:20, cex= 2)
+
+##Question 11
+plot(1:8, 1:8, type= "n", ylab="line types", xlab="")
+abline(h= 1:8, lty= 1:8)
+
+##Question 12
+plot(DML~ovary.weight, pch=as.numeric(maturity.stage), col=as.numeric(maturity.stage), xlab="ovary weight", ylab="DML")
+labs <- c("stage 1", "stage 2", "stage 3", "stage 4","stage 5")
+cols <- as.numeric(levels(squid$maturity.stage))
+point <- as.numeric(levels(squid$maturity.stage))
+legend(38,148, labs,col=cols, pch=point)
+
+################################################################################
+##### Exercise 5
+
+## question 1
+squid2<-read.table("C://squid2.txt", header=T)
+attach(squid2)
+
+## question 2
+qqnorm(weight)
+qqline(weight)
+
+shapiro.test(weight)
+# p < 0.5, hence not normal
+# use non-parametric test
+
+## question 3
+wilcox.test(weight, mu=280)
+# p > 0.5, no evidence that average is different from 280
+
+## question 4
+
+new.squid <- squid2 [squid2$year !=1989,]
+squid.90 <- squid2 [squid2$year ==1990,]
+squid.91 <- squid2 [squid2$year ==1991,]
+
+
+# I do not attach these to avoid confusion
+shapiro.test(squid.90$weight)
+shapiro.test(squid.91$weight)
+
+#both rather non-normal, hence non-parametric test
+wilcox.test(new.squid$weight~ new.squid$year)
+
+## question 5
+
+plot(nid.length, nid.weight)
+# strong non-linearity
+
+## question 6
+
+squid.lm<-lm(nid.weight~nid.length)
+summary(squid.lm)
+# relationship seems significant, but is the model appropriate?
+plot(squid.lm)
+# non-linearity shows in residual plot!
+
+## question 7
+
+squid.lm2<-lm(nid.weight~nid.length+I(nid.length^2)))
+plot(squid.lm2)
+# improved residual plot
+# there is still some strange behaviour to be observed;
+# apparently a more sophistcated model is needed
+
+## question 8
+
+squid.lm.4<-lm(DML~ eviscerate.weight+dig.weight+ nid.length+ovary.weight+as.factor(year))
+summary(squid.lm.4)
+squid.lm.5<-lm(DML~ eviscerate.weight+ nid.length+as.factor(year))
+summary(squid.lm.5)
+
+## question 9
+
+pairs(squid2[8:13])
+# many relationships are not linear, more sophistacted approach needed
+
+plot(squid.lm.4)
+plot(squid.lm.5)
+# both show problems with non-linearity in the residuals
+
+# on the basis of what we have learned so far we cannot tell which model
+# is better; shall learn how to do this next week!
+
+
+################################################################################
+##### Exercise 6
+
+
+##Question 1
+circle.area <- function(r){ 
+	pi*r^2
+}
+
+##Question 2
+far.cent <- function(a){
+	val <-(a-32)*5/9
+	print(paste("Fahrenheit: ", round(a, digits=3), "oF",sep=" "), quote=FALSE)	# round to 3 dp
+	print(paste("Centigrade: ", round(val, digits=3), "oC", sep=" "), quote=FALSE)# round to 3 dp
+}
+
+far.cent(100)
+
+#alternative Fahrenheit to centigrade using cat function
+
+far.cent2 <- function(a){
+	val <-(a-32)*5/9	#calculation
+	cat("Fahrenheit: ", round(a, digits=3), "oF", "\n")# use cat function
+	cat("Centigrade: ", round(val, digits=3), "oC", "\n")# use cat function
+}
+
+far.cent2(100)
+
+##Question 3
+#Create a vector of normally distributed data
+#length 100, mean 35 and standard deviation of 29
+
+vals <- rnorm(100, 35,15)	#create some norm dist data mean 35, sd=15
+summary.fun <- function(dat){
+	mymean <- round(mean(dat), digits=4)	#calc mean
+	mymedian <- round(median(dat), digits=4)#calc median
+	mymin <- round(min(dat), digits=4)#calc min
+	mymax <- round(max(dat), digits=4)#calc max
+	print(paste("mean:", mymean, sep=" "), quote=FALSE)# print mean
+	print(paste("median:", mymedian, sep=" "), quote=FALSE)#print median
+	print(paste("range:", "from:",mymin, "to", mymax, sep=" "), quote=FALSE)#print range
+	dens <- density(dat)#estimate density curve
+	hist(dat, main="",freq=FALSE)#plot histogram
+	lines(dens, lty=1, col="red")#plot density curve
+}
+
+summary.fun(vals)
+
+##Question 4
+#calculate a median
+
+ourmedian <- function(x){
+	n<-length(x)
+	if (n %% 2==1) ## odd numbers
+	sort(x)[(n+1)/2] # find the middle number by adding 1 to length and div 2
+	else { ## even numbers
+	middletwo <- sort(x)[(n/2)+0:1]#find the two middle numbers
+	mean(middletwo)
+}
+}
+
+##Question 5
+#function to simulate Ricker model
+
+Ricker.model <- function(nzero, r, time, K=1)#sets initial population size, pop growth, time and carrying capacity
+{
+  N <- numeric(time+1)   #creates a real vector of length time+1 to store values of Nt+1
+  N[1] <- nzero          #sets initial population size in first element of N
+  for (i in 1:time) {	#loops over time
+  N[i+1] <- N[i]*exp(r*(1 - N[i]/K))    
+  #outN <<- N	# make outN available outside the function, notice <<-
+  }
+  Time <- 0:time   					 # creates vector for x axis
+  #outTime <<- Time                # make outTime available outside the function, notice <<-
+  plot(Time, N, type="l", xlim=c(0, time), xlab="Time", ylab="Population size (N)", main=paste("r =",r, sep=" "))   #plots output
+}
+
+# To run
+
+Ricker.model(nzero=0.1,r=1,time=100)
+
+#simulate for values of r from 0 to 4 in 0.5 steps
+par(mfrow=c(3,3))
+rvec <- seq(0,4, 0.5)
+for(i in rvec){
+	Ricker.model(2,i, 100)
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
